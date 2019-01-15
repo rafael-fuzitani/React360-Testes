@@ -67,7 +67,13 @@ class React360 extends Component {
 
   renderImage = () => {
     const { imageIndex } = this.state;
-
+    const children = React.Children.map(this.props.children, (child, index) => {
+      return React.cloneElement(child, {
+        index,
+        currentImage: imageIndex,
+        someFunction: () => console.log("index is " + imageIndex)
+      });
+    });
     return (
       <div className="react360">
         <img
@@ -75,19 +81,12 @@ class React360 extends Component {
           alt=""
           src={require(`./${this.props.dir}/${imageIndex}.jpg`)}
         />
+        {children}
       </div>
     );
   };
 
   render = () => {
-    const children = React.Children.map(this.props.children, (child, index) => {
-      return React.cloneElement(child, {
-        index,
-        currentImage: this.state.imageIndex
-        // someFunction: () => this.setState({ imageIndex: index })
-      });
-    });
-
     return (
       <div
         className="react-360-img"
@@ -95,7 +94,6 @@ class React360 extends Component {
         onDragStart={this.preventDragHandler}
       >
         {this.renderImage()}
-        {children}
       </div>
     );
   };
